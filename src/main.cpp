@@ -7,6 +7,7 @@
 #include "usb_serial.h"
 
 #include "vr_con.h"
+#include "mpu6050.h"
 
 static int led_count;
 
@@ -31,6 +32,26 @@ void flash_led_handle(void)
     }
 }
 
+void vr_con_run(void)
+{
+    char buf[100];
+    struct MPU6050_accelgyro accelgyro;
+
+    MPU6050_init();
+
+    serial_printf("MPU6050 started\n");
+
+    while (1) {
+        MPU6050_read_accelgyro(&accelgyro);
+        snprintf(buf, sizeof(buf), "A: x:%06d y:%06d z:%06d G: x:%06d y:%06d z:%06d\r\n",
+                accelgyro.x_accel, accelgyro.y_accel, accelgyro.z_accel,
+                accelgyro.x_gyro, accelgyro.y_gyro, accelgyro.z_gyro);
+        hc05_serial.write(buf);
+        serial_printf("B: %s\n", buf);
+        delay(1);
+    }
+}
+
 void main_cmd_handle(char *cmd)
 {
     if (strncmp(cmd, "hc-", 3) == 0) {
@@ -47,7 +68,11 @@ void main_cmd_handle(char *cmd)
                      "\n"
                      "hc-at: Enter HC-05 AT mode\n"
                      "hc-connected: Report if the HC-05 is connected to a device\n"
+                     "vr-con-start: Start VR Controller\n"
                 );
+    } else if (strncmp(cmd, "vr-con-start", 12) == 0) {
+        serial_printf("Starting VR Controller\n");
+        vr_con_run();
     }
 }
 
@@ -79,6 +104,8 @@ void setup(void)
     cmd_prompt = CMD_PROMPT;
     Serial.print(cmd_prompt);
     cmd_handle_callback = main_cmd_handle;
+
+    hc05_serial.begin(115200);
 }
 
 void loop(void)

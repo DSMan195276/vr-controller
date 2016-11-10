@@ -69,7 +69,7 @@ static void hc05_enter_at_mode(void)
 {
     in_at_mode = 1;
     //hc05_serial.begin(115200);
-    hc05_serial.begin(9600);
+    hc05_serial.begin(115200);
     //hc05_serial.begin(38400);
     digitalWrite(HC05_KEY_PIN, in_at_mode);
 }

@@ -1,5 +1,5 @@
 BOARD_TAG    = teensyLC
-ARDUINO_LIBS =
+ARDUINO_LIBS = Wire
 F_CPU        = 48000000
 MCU          = cortex-m0plus
 USB_TYPE     = USB_SERIAL
