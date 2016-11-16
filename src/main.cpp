@@ -34,7 +34,7 @@ void flash_led_handle(void)
 
 void vr_con_run(void)
 {
-    char buf[100];
+    char buf[200];
     struct MPU6050_accelgyro accelgyro;
 
     MPU6050_init();
@@ -43,11 +43,11 @@ void vr_con_run(void)
 
     while (1) {
         MPU6050_read_accelgyro(&accelgyro);
-        snprintf(buf, sizeof(buf), "A: x:%06d y:%06d z:%06d G: x:%06d y:%06d z:%06d\r\n",
+        snprintf(buf, sizeof(buf), "%06d %06d %06d %06d %06d %06d %d\r\n",
                 accelgyro.x_accel, accelgyro.y_accel, accelgyro.z_accel,
-                accelgyro.x_gyro, accelgyro.y_gyro, accelgyro.z_gyro);
+                accelgyro.x_gyro, accelgyro.y_gyro, accelgyro.z_gyro, millis());
         hc05_serial.write(buf);
-        serial_printf("B: %s\n", buf);
+        serial_printf("%s", buf);
         delay(1);
     }
 }
@@ -72,7 +72,7 @@ void main_cmd_handle(char *cmd)
                 );
     } else if (strncmp(cmd, "vr-con-start", 12) == 0) {
         serial_printf("Starting VR Controller\n");
-        vr_con_run();
+        vr_run();
     }
 }
 
@@ -80,7 +80,7 @@ void setup(void)
 {
 	pinMode(LEDPIN, OUTPUT);
 
-    pinMode(MPU_6050_INT_PIN, INPUT_PULLDOWN);
+    pinMode(MPU6050_INT_PIN, INPUT_PULLDOWN);
 
     pinMode(HC05_RESET_PIN, OUTPUT);
     pinMode(HC05_KEY_PIN, OUTPUT);

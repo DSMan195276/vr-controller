@@ -15,7 +15,7 @@
 #define HC05_KEY_PIN       3
 #define HC05_CONNECTED_PIN 4
 
-#define MPU_6050_INT_PIN   10
+#define MPU6050_INT_PIN   9
 
 #define hc05_serial Serial1
 
@@ -32,5 +32,7 @@ char *cmd_get_next(char *cmd);
 
 void flash_led(void);
 void flash_led_handle(void); /* Should be called in any infinite loops */
+
+void vr_run(void);
 
 #endif
