@@ -9,7 +9,7 @@
 #include <Wire.h>
 
 #include "vr_con.h"
-#include "mpu6050.h"
+#include "mpu6050_2.h"
 
 typedef union accel_t_gyro_union
 {

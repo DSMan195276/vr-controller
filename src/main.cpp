@@ -7,7 +7,7 @@
 #include "usb_serial.h"
 
 #include "vr_con.h"
-#include "mpu6050.h"
+#include "mpu6050_2.h"
 
 static int led_count;
 
@@ -106,6 +106,8 @@ void setup(void)
     cmd_handle_callback = main_cmd_handle;
 
     hc05_serial.begin(115200);
+
+    vr_run();
 }
 
 void loop(void)

@@ -116,6 +116,30 @@ void vr_run(void)
             mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
             mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
 
+            char buf[512];
+            char floats[7][10];
+
+            snprintf(buf, sizeof(buf),
+                    "%s %s %s %s "
+                    "%s %s %s "
+                    "%hd %hd %hd "
+                    "%hd %hd %hd "
+                    "%ld\r\n",
+                    dtostrf(q.w, 4, 2, floats[0]),
+                    dtostrf(q.x, 4, 2, floats[1]),
+                    dtostrf(q.y, 4, 2, floats[2]),
+                    dtostrf(q.z, 4, 2, floats[3]),
+                    dtostrf(gravity.x, 4, 2, floats[4]),
+                    dtostrf(gravity.y, 4, 2, floats[5]),
+                    dtostrf(gravity.z, 4, 2, floats[6]),
+                    aa.x, aa.y, aa.z,
+                    aaReal.x, aaReal.y, aaReal.z,
+                    millis());
+
+            hc05_serial.write(buf);
+            Serial.write(buf);
+
+#if 0
             Serial.print(q.w);
             Serial.print(" ");
             Serial.print(q.x);
@@ -147,6 +171,7 @@ void vr_run(void)
             Serial.print(" ");
 
             Serial.println(millis());
+#endif
 
             #ifdef OUTPUT_READABLE_EULER
                 // display Euler angles in degrees
