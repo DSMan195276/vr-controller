@@ -7,7 +7,6 @@
 #include "usb_serial.h"
 
 #include "vr_con.h"
-#include "mpu6050_2.h"
 
 static int led_count;
 
@@ -29,26 +28,6 @@ void flash_led_handle(void)
     if (led_count == 10) {
         digitalWrite(LEDPIN, 0);
         led_count = -1;
-    }
-}
-
-void vr_con_run(void)
-{
-    char buf[200];
-    struct MPU6050_accelgyro accelgyro;
-
-    MPU6050_init();
-
-    serial_printf("MPU6050 started\n");
-
-    while (1) {
-        MPU6050_read_accelgyro(&accelgyro);
-        snprintf(buf, sizeof(buf), "%06d %06d %06d %06d %06d %06d %d\r\n",
-                accelgyro.x_accel, accelgyro.y_accel, accelgyro.z_accel,
-                accelgyro.x_gyro, accelgyro.y_gyro, accelgyro.z_gyro, millis());
-        hc05_serial.write(buf);
-        serial_printf("%s", buf);
-        delay(1);
     }
 }
 
